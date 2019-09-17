@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+</h:head>
+
+<h:form id="form">
+	<p:growl id="messages" showDetail="false" />
+
+	<h3>Skill-DB</h3>
+
+	<p:panelGrid columns="2" styleClass="ui-noborder">
+		<ui:include src="template/menu.xhtml" />
+
+		<p:dataTable id="table" var="row" value="#{mitarbeiterView.mitarbeiter}" liveResize="true" resizableColumns="true">
+			<p:column headerText="Name" sortBy="#{row.name}">
+				<h:outputText value="#{row.name}" />
+			</p:column>
+			<p:column headerText="Vorname" sortBy="#{row.vorname}">
+				<h:outputText value="#{row.vorname}" />
+			</p:column>
+			<p:column headerText="Standort" sortBy="#{row.site}">
+				<h:outputText value="#{row.site}" />
+			</p:column>
+			<p:column headerText="Position">
+				<ui:repeat var="role" value="#{row.role}">
+			      <h:outputText value="#{role}" /> <br />
+			    </ui:repeat>
+			</p:column>
+			<p:column headerText="Rei&#8203;se&#8203;be&#8203;reit" sortBy="#{row.travelReady}">
+				<p:selectBooleanCheckbox value="#{row.travelReady}" disabled="true"/>
+			</p:column>
+			<p:column headerText="Eng&#8203;lisch&#8203;kenntnis&#8203;se" sortBy="#{row.english}">
+				<h:outputText value="#{row.english}" />
+			</p:column>
+			<p:column headerText="Skillset">
+				<p:commandLink action="#{adminView.openSkillDialog(row)}" title="Detail" styleClass="ui-icon pi pi-search">
+					<f:setPropertyActionListener value="#{row}" target="#{mitarbeiterView.selectedEmployee}" />
+				</p:commandLink>
+				<p:commandLink oncomplete="#{adminView.openNewSkillDialog(row)}" title="Skill hinzufügen" styleClass="ui-icon pi pi-plus">
+					<f:setPropertyActionListener value="#{row}" target="#{skillView.employee}" />
+				</p:commandLink>
+			</p:column>
+			<p:column headerText="Löschen">
+				<p:commandLink update=":form, :form:table" action="#{mitarbeiterService.deleteEmployee(row)}" 
+						title="Löschen" styleClass="ui-icon pi pi-trash"/>
+			</p:column>
+		</p:dataTable>
+	</p:panelGrid>
+    
+</h:form>
+
+</html>

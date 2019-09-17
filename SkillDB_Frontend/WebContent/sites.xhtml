@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <h:outputStylesheet name="css/style.css" />
+</h:head>
+
+<h:form id="form">
+    <p:growl id="messages" showDetail="false" />
+
+    <div class="ui-g verticalCenter">
+        <h3 class="ui-g-4">Skill-DB</h3>
+
+        <p:outputLabel styleClass="ui-g-1" value="Standort:" for="selectedSite" />
+        <p:selectOneMenu id="selectedSite" styleClass="ui-g-2" value="#{siteView.selectedSite}">
+            <p:ajax listener="#{siteView.filter}" update="table" />
+            <f:selectItem itemLabel="Standort wählen" itemValue="" />
+            <f:selectItems value="#{newEmployeeView.sites}" />
+        </p:selectOneMenu>
+    </div>
+
+    <p:remoteCommand name="clearTable" action="#{siteView.showNone}" update="table" autoRun="true" />
+
+    <p:panelGrid columns="2" styleClass="ui-noborder">
+        <ui:include src="template/menu.xhtml" />
+
+        <p:dataTable id="table" var="row" value="#{siteView.employees}" liveResize="true" resizableColumns="true">
+            <p:column headerText="Name" sortBy="#{row.name}">
+                <h:outputText value="#{row.name}" />
+            </p:column>
+            <p:column headerText="Vorname" sortBy="#{row.vorname}">
+                <h:outputText value="#{row.vorname}" />
+            </p:column>
+            <p:column headerText="Position">
+                <ui:repeat var="role" value="#{row.role}">
+                    <h:outputText value="#{role}" /> <br />
+                </ui:repeat>
+            </p:column>
+            <p:column headerText="Rei&#8203;se&#8203;be&#8203;reit" sortBy="#{row.travelReady}">
+                <p:selectBooleanCheckbox value="#{row.travelReady}" disabled="true" />
+            </p:column>
+            <p:column headerText="Eng&#8203;lisch&#8203;kenntnis&#8203;se" sortBy="#{row.english}">
+                <h:outputText value="#{row.english}" />
+            </p:column>
+            <p:column headerText="Skillset">
+                <p:commandLink update=":form:skillsDialog, :form:skillsDetails" oncomplete="PF('skillsDialog').show()" title="Detail"
+                               styleClass="ui-icon pi pi-search">
+                    <f:setPropertyActionListener value="#{row}" target="#{mitarbeiterView.selectedEmployee}" />
+                </p:commandLink>
+            </p:column>
+            <p:column headerText="Löschen">
+                <p:commandLink update=":form, :form:table" action="#{mitarbeiterService.deleteEmployee(row)}"
+                               title="Löschen" styleClass="ui-icon pi pi-trash" />
+            </p:column>
+        </p:dataTable>
+    </p:panelGrid>
+
+    <div class="ui-g">
+        <div class="ui-g-5"></div>
+        <p:commandButton value="Standort anlegen" action="#{adminView.addNewSite}" icon="pi pi-home">
+        	<p:ajax event="dialogReturn" listener="#{newEmployeeView.addSite}" update="selectedSite" />
+        </p:commandButton>
+    </div>
+
+    <p:dialog id="skillsDialog" header="Skillsheet von #{mitarbeiterView.selectedEmployee.vorname} #{mitarbeiterView.selectedEmployee.lastname}"
+              showEffect="fade" widgetVar="skillsDialog" modal="true" resizable="true">
+        <p:outputPanel id="skillsDetails">
+            <p:dataTable var="skillRow" value="#{mitarbeiterView.selectedEmployee.skills}">
+                <p:column headerText="Skill">
+                    <h:outputText value="#{skillRow.skill}" />
+                </p:column>
+                <p:column headerText="Ausprägung">
+                    <h:outputText value="#{skillRow.expertiseString.expertise} - #{skillRow.expertiseString.fullNameString}" />
+                </p:column>
+                <p:column headerText="Beschreibung">
+                    <h:outputText value="#{skillRow.description}" />
+                </p:column>
+            </p:dataTable>
+        </p:outputPanel>
+    </p:dialog>
+
+</h:form>
+</html>

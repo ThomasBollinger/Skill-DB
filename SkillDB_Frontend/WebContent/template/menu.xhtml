@@ -1,0 +1,28 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:menu toggleable="true">
+		<p:submenu label="Verwaltung">
+			<p:menuitem value="Mitarbeiter" action="#" update="messages"
+				icon="pi pi-save" url="MainMenu.xhtml" />
+			<p:menuitem>
+				<p:commandButton action="sites.xhtml?faces-redirect=true" value="Standort" icon="pi pi-home" process="@this"/>
+			</p:menuitem>
+			<p:menuitem>
+				<p:commandButton value="Mitarbeiter anlegen" action="#{adminView.addNewEmployee}" icon="pi pi-users" process="@this">
+					<p:ajax event="dialogReturn" listener="#{mitarbeiterView.update}" update=":form, :form:table"/>
+				</p:commandButton>
+			</p:menuitem>
+			<p:menuitem>
+				<p:commandButton value="Nach Skills suchen" action="#{adminView.openSkillsSearchDialog}" icon="pi pi-search"
+						process="@this">
+					<p:ajax event="dialogReturn" update=":form, :form:table"/>
+				</p:commandButton>
+			</p:menuitem>
+		</p:submenu>
+	</p:menu>
+</ui:composition>

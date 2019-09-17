@@ -1,0 +1,9 @@
+.centered {
+    text-align: center;
+    display: block;
+}
+
+.verticalCenter {
+    display: flex;
+    align-items: center;
+}

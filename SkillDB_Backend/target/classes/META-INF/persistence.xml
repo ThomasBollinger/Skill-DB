@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="SkillDB" transaction-type="JTA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/PostgresDS</jta-data-source>
+		<class>com.auticon.learning.skilldb.entities.Employee</class>
+		<class>com.auticon.learning.skilldb.entities.Expertise_String</class>
+		<class>com.auticon.learning.skilldb.entities.Role</class>
+		<class>com.auticon.learning.skilldb.entities.Site</class>
+		<class>com.auticon.learning.skilldb.entities.Skill</class>
+		
+		<properties>
+        <!-- EclipseLink should create the database schema automatically -->
+	        <property name="eclipselink.ddl-generation" value="create-tables" />
+	        <property name="eclipselink.ddl-generation.output-mode"
+	            value="database" />
+	        <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver"></property>
+	        <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/SkillDB"></property>
+	        <property name="javax.persistence.jdbc.user" value="postgres"></property>
+	        <property name="javax.persistence.jdbc.password" value="auti83TB"></property>
+    	</properties>
+	</persistence-unit>
+</persistence>

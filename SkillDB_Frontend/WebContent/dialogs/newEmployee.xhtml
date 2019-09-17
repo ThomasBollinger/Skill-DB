@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Neuen Mitarbeiter anlegen</title>
+</h:head>
+
+
+<h:form id="newForm">
+	<p:growl id="messages" showDetail="false" />
+	<p:focus for="newFirstname"/>
+
+	<h:panelGrid columns="2" cellpadding="5">
+		<p:outputLabel value="Vorname:" for="newFirstname"/>
+		<p:inputText id="newFirstname" value="#{newEmployeeView.newEmployee.vorname}" required="true" requiredMessage="Vorname fehlt"/>
+		
+		<p:outputLabel value="Nachname:" for="newLastname"/>
+		<p:inputText id="newLastname" value="#{newEmployeeView.newEmployee.name}" required="true" requiredMessage="Nachname fehlt"/>
+		
+		<p:outputLabel value="E-Mail:" for="newEmail"/>
+		<p:inputText id="newEmail" value="#{newEmployeeView.newEmployee.email}" required="true" requiredMessage="E-Mail nicht korrekt">
+			<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+		</p:inputText>
+		
+		<p:outputLabel value="Eintrittsdatum" for="newEntrydate"/>
+		<p:datePicker id="newEntrydate" value="#{newEmployeeView.newEmployee.entryDate}" showIcon="true" />
+		
+		<p:outputLabel value="Position(en):" for="newRole"/>
+		<p:selectCheckboxMenu id="newRole" value="#{newEmployeeView.newEmployee.role}" multiple="true" filter="false">
+			<f:selectItems value="#{newEmployeeView.roles}"/>
+		</p:selectCheckboxMenu>
+		
+		<p:outputLabel value="Standort:" for="newSite"/>
+		<p:selectOneMenu id="newSite" value="#{newEmployeeView.newEmployee.site}" required="true" requiredMessage="Standort auswählen">
+			<f:selectItem itemLabel="Standort wählen" itemValue=""/>
+			<f:selectItems value="#{newEmployeeView.sites}"/>
+		</p:selectOneMenu>
+		
+		<p:outputLabel value="Reisebereit: " for="newTravelReady"/>
+		<p:toggleSwitch id="newTravelReady" value="#{newEmployeeView.newEmployee.travelReady}"/>
+		
+		<p:outputLabel value="Englischkenntnisse:" for="newEnglishExpertise"/>
+		<p:selectOneMenu id="newEnglishExpertise" value="#{newEmployeeView.newEmployee.english}">
+			<f:selectItems value="#{commons.expertises}"/>
+		</p:selectOneMenu>
+	</h:panelGrid>
+	
+	<h3>Skillsheet</h3>
+	<p:panelGrid id="skillPanel" columns="2" cellpadding="5" styleClass="ui-noborder">
+		<p:column>
+			<p:dataTable id="skillsheet" var="skill" value="#{newEmployeeView.newEmployee.skills}" emptyMessage="">
+				<p:column headerText="Skill">
+					<h:outputText value="#{skill.name}" />
+				</p:column>
+				<p:column headerText="Ausprägung">
+					<h:outputText value="#{skill.expertise}" />
+				</p:column>
+				<p:column headerText="Beschreibung">
+					<h:outputText value="#{skill.description}" />
+				</p:column>
+			</p:dataTable>
+		</p:column>
+		<p:column style="width:50px">
+			<p:commandButton id="openAddSkill" process="@this" action="#{adminView.openNewSkillDialog}"
+					title="Neuer Skill" icon="pi pi-plus">
+				<!-- <f:setPropertyActionListener target="#{skillView.employee}" value="#{newEmployeeView.newEmployee}"/> -->
+				<p:ajax event="dialogReturn" update=":newForm :newForm:skillPanel"/>
+			</p:commandButton>		
+		</p:column>
+	</p:panelGrid>
+	
+	<p:commandButton value="Anlegen" id="submitNew" action="#{mitarbeiterService.submitEmployee(newEmployeeView.newEmployee)}" icon="pi pi-save"
+		validateClient="true"/>
+</h:form>
+</html>
